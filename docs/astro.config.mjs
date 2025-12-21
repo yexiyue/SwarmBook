@@ -6,19 +6,41 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'SwarmBook',
+			description: '和我一起探索去中心化网络的奥秘 - Rust libp2p 学习笔记与实战',
+			defaultLocale: 'zh-CN',
+			locales: {
+				root: { label: '简体中文', lang: 'zh-CN' },
+			},
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/yexiyue/SwarmBook' }],
 			sidebar: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					label: 'P2P 基础概念',
+					autogenerate: { directory: '01-p2p-basics' },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: '传输层与安全',
+					autogenerate: { directory: '02-transport-security' },
+				},
+				{
+					label: 'Swarm 与协议',
+					autogenerate: { directory: '03-swarm-protocols' },
+				},
+				{
+					label: '节点发现与路由',
+					autogenerate: { directory: '04-discovery-routing' },
+				},
+				{
+					label: '消息传播',
+					autogenerate: { directory: '05-messaging' },
+				},
+				{
+					label: 'P2P yjs 后端',
+					badge: {
+						text: '实战',
+						variant: 'success'
+					},
+					autogenerate: { directory: '06-yjs-backend' },
 				},
 			],
 		}),

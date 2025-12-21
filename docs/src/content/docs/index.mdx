@@ -1,40 +1,40 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: SwarmBook
+description: 和我一起探索去中心化网络的奥秘 - Rust libp2p 学习笔记与实战
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
+  tagline: 从零开始学习 Rust libp2p，构建去中心化应用
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: 开始学习
+      link: /SwarmBook/01-p2p-basics/01-what-is-p2p/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
+    - text: GitHub
+      link: https://github.com/parity-asia/swarmbook
+      icon: github
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## 教程内容
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+<CardGrid>
+	<Card title="P2P 基础概念" icon="rocket">
+		理解 P2P 架构、节点身份、多地址格式
 	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
+	<Card title="传输层与安全" icon="shield">
+		TCP/QUIC/WebSocket、Noise 加密、流复用
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Swarm 与协议" icon="puzzle">
+		NetworkBehaviour、自定义协议、请求响应模式
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="节点发现与路由" icon="magnifier">
+		mDNS、Kademlia DHT、Bootstrap
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="消息传播" icon="comment">
+		GossipSub、主题网格、消息验证
+	</Card>
+	<Card title="实战项目" icon="star">
+		构建 P2P yjs 后端，实现去中心化协作编辑
 	</Card>
 </CardGrid>
