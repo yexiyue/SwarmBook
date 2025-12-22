@@ -1,10 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import mermaid from 'astro-mermaid';
 
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		mermaid(),
 		starlight({
 			title: 'SwarmBook',
 			description: '和我一起探索去中心化网络的奥秘 - Rust libp2p 学习笔记与实战',
