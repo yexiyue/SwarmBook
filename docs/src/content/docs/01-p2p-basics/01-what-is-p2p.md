@@ -3,10 +3,10 @@ title: 什么是 P2P
 description: 一场始于宿舍、终于星辰的去中心化远征
 tableOfContents:
   minHeadingLevel: 2
-  maxHeadingLevel: 4
+  maxHeadingLevel: 5
 ---
 
-#### 故事的开始：一个大学生的叛逆
+## Napster：一切的开始
 
 1999 年夏末，美国波士顿的一间大学宿舍里，空调嗡嗡作响，18 岁的肖恩·范宁（[Shawn Fanning](https://zh.wikipedia.org/wiki/Shawn_Fanning)）正盯着屏幕上又一次失败的 MP3 下载进度条发呆。他不是第一个为这事烦恼的人，但他决定做点不一样的事。
 
@@ -14,7 +14,7 @@ tableOfContents:
 
 短短一年，Napster 用户突破 8000 万。大学生们用它交换 Radiohead 的新专辑，程序员分享 Linux 发行版，地下乐队上传自己的 demo。互联网第一次展现出一种全新的可能性：无需中心，也能协作。这就是 P2P（Peer-to-Peer，点对点）技术第一次震撼世界。
 
-#### 唱片业的反击与 Napster 的陨落
+### Napster 的陨落
 
 但风暴很快降临。2001 年，重金属乐队 Metallica 的鼓手 [Lars Ulrich](https://zh.wikipedia.org/wiki/Lars_Ulrich) 走进法院，手中抱着一摞打印出来的用户名单——那是 Napster 上分享他们歌曲的用户。唱片公司紧随其后，控诉 Napster 助长盗版。法院最终裁定：关闭 Napster 的中央服务器。
 
@@ -22,7 +22,7 @@ tableOfContents:
 
 Napster 死了，但它播下的种子已经生根发芽。全世界的程序员都在思考同一个问题：如何构建一个真正去中心化的网络，让任何人都无法关闭它？
 
-#### 地下世界的进化：从 Gnutella 到 BitTorrent
+### Gnutella 与 BitTorrent
 
 就在 Napster 被关停的同一年，一个匿名开发者在互联网角落发布了一个新程序，取名 [Gnutella](https://zh.wikipedia.org/wiki/Gnutella)——由"GNU"（自由软件运动）和"Nutella"（人人可分享的巧克力酱）拼合而成。它的宣言简单而激进：我们不需要任何人。
 
@@ -36,7 +36,7 @@ Gnutella 彻底抛弃了中心服务器。每个用户启动后，会向已知�
 
 结果出人意料：热门资源下载飞快，因为每个下载者都在成为上传者。BitTorrent 迅速成为全球事实标准——不仅被用于盗版，也被 [Ubuntu](https://ubuntu.com/)、[Debian](https://www.debian.org/)、[Blender](https://www.blender.org/) 等开源项目官方采用。据统计，高峰时期 BitTorrent 流量占据了全球互联网流量的三分之一。它证明，去中心化不必牺牲效率，甚至可以比中心化更高效。
 
-#### 寻找的艺术：Kademlia 与 DHT
+### Kademlia 与 DHT
 
 可新的难题接踵而至：如果没有 Tracker（追踪器）告诉用户彼此的地址，他们如何在茫茫人海中找到对方？
 
@@ -46,7 +46,7 @@ Gnutella 彻底抛弃了中心服务器。每个用户启动后，会向已知�
 
 2005 年，BitTorrent 整合了 Kademlia（称为 [Mainline DHT](https://wiki.theory.org/BitTorrentSpecification#Distributed_Hash_Table_.28DHT.29)），彻底摆脱对 Tracker 的依赖。从此，即使所有中心服务器消失，网络依然能自我发现、自我连接。P2P 真正走向了自治。
 
-#### 自由的代价：Freenet 与 I2P
+### Freenet 与 I2P
 
 与此同时，另一群人思考着更深层的问题：如果网络可以共享文件，能否也共享自由？
 
@@ -54,7 +54,7 @@ Gnutella 彻底抛弃了中心服务器。每个用户启动后，会向已知�
 
 几年后，[I2P（Invisible Internet Project）](https://geti2p.net/) 更进一步，构建了一整套加密覆盖网络，让通信本身不可见。P2P 不再只是工具，而成为数字抵抗的基础设施。
 
-#### 货币的革命：比特币与区块链
+### 比特币与区块链
 
 但真正的范式转移，发生在 2008 年 10 月 31 日。那天，一个化名**[中本聪（Satoshi Nakamoto）](https://zh.wikipedia.org/wiki/Satoshi_Nakamoto)** 的人在密码学邮件列表中发布了一篇白皮书：《[比特币：一种点对点的电子现金系统](https://bitcoin.org/bitcoin.pdf)》。
 
@@ -68,7 +68,7 @@ P2P 不再只是传递文件，而是传递价值、建立规则、铸造制度�
 
 比特币之后，[以太坊](https://ethereum.org/)、[Solana](https://solana.com/)、[Polkadot](https://polkadot.network/) 等区块链项目相继出现，它们都建立在 P2P 网络之上。区块链让 P2P 技术从极客的玩具变成了万亿美元的产业。
 
-#### 超越文件分享：IPFS 的野心
+### IPFS
 
 受此启发，2015 年，[协议实验室（Protocol Labs）](https://protocol.ai/) 推出 [IPFS（InterPlanetary File System，星际文件系统）](https://ipfs.tech/)，目标直指 HTTP 协议本身。
 
@@ -76,7 +76,7 @@ HTTP 基于地址寻址——链接指向服务器位置，一旦服务器关闭
 
 IPFS 整合了 BitTorrent 的分块传输、Kademlia 的分布式路由，还加入了 Git 的版本控制思想。它试图构建一个永久存续、抗审查、用户主权的下一代互联网。
 
-#### libp2p：集大成者
+### libp2p
 
 二十多年的 P2P 发展史，留下了无数宝贵的经验和教训。但每个项目都在重复造轮子：Napster 写一套网络代码，BitTorrent 写一套，IPFS 又写一套……
 
@@ -88,7 +88,7 @@ libp2p 不是一个应用，而是一个工具箱。它把 P2P 网络中的各�
 
 而这，就是我们这个教程要学习的东西。
 
-#### 为什么 P2P 重要？
+### 为什么 P2P 重要
 
 从 Napster 的宿舍代码，到比特币的创世区块，再到 IPFS 的星际愿景，P2P 走过了二十五年。它始于一个少年对慢速下载的不满，却最终演变为一场关于权力、自由与协作的宏大实验。
 
@@ -101,7 +101,7 @@ libp2p 不是一个应用，而是一个工具箱。它把 P2P 网络中的各�
 - **资源利用**：利用参与者的闲置带宽和存储，而不是依赖昂贵的中心化基础设施。
 - **信任重构**：信任不必依赖权威，秩序可以在没有指挥的情况下自生。
 
-### 我们要做什么？
+## 我们要做什么？
 
 在这个教程中，我们将用 Rust 和 libp2p 构建一个 P2P 协作编辑后端——类似 Google Docs 的实时协作功能，但不需要 Google 的服务器。
 
@@ -109,7 +109,7 @@ libp2p 不是一个应用，而是一个工具箱。它把 P2P 网络中的各�
 
 这就是 P2P 的魅力，也是我们要实现的目标。
 
-### 小结
+## 小结
 
 从 1999 年 Napster 的横空出世，到今天遍布全球的区块链网络，P2P 技术走过了二十五年的历程。这段历史告诉我们：
 

@@ -3,10 +3,10 @@ title: What is P2P
 description: A decentralized expedition from dorm room to the stars
 tableOfContents:
   minHeadingLevel: 2
-  maxHeadingLevel: 4
+  maxHeadingLevel: 5
 ---
 
-#### The Beginning: A College Student's Rebellion
+## Napster: Where It All Began
 
 In late summer 1999, in a college dorm room in Boston, with the air conditioner humming, 18-year-old [Shawn Fanning](https://en.wikipedia.org/wiki/Shawn_Fanning) stared blankly at yet another failed MP3 download progress bar. He wasn't the first to be frustrated by this, but he decided to do something different.
 
@@ -14,7 +14,7 @@ A few days later, a program called [Napster](https://en.wikipedia.org/wiki/Napst
 
 Within a year, Napster had over 80 million users. College students exchanged Radiohead's new album, programmers shared Linux distributions, underground bands uploaded their demos. For the first time, the internet demonstrated a new possibility: collaboration without a center. This was P2P (Peer-to-Peer) technology's first moment of shocking the world.
 
-#### The Record Industry Strikes Back and Napster's Fall
+### The Fall of Napster
 
 But the storm came quickly. In 2001, Metallica's drummer [Lars Ulrich](https://en.wikipedia.org/wiki/Lars_Ulrich) walked into court carrying a stack of printed usernames—users who had shared their songs on Napster. Record companies followed suit, accusing Napster of facilitating piracy. The court ultimately ruled: shut down Napster's central server.
 
@@ -22,7 +22,7 @@ The moment the order was executed, the entire network collapsed instantly. Tens 
 
 Napster died, but the seeds it planted had already taken root. Programmers worldwide were pondering the same question: how to build a truly decentralized network that no one could shut down?
 
-#### Underground Evolution: From Gnutella to BitTorrent
+### Gnutella and BitTorrent
 
 The same year Napster was shut down, an anonymous developer released a new program in a corner of the internet, named [Gnutella](https://en.wikipedia.org/wiki/Gnutella)—a combination of "GNU" (the free software movement) and "Nutella" (chocolate spread everyone can share). Its manifesto was simple and radical: we don't need anyone.
 
@@ -36,7 +36,7 @@ Unlike Gnutella's idealism, BitTorrent was full of engineering wisdom. It split 
 
 The result was surprising: popular resources downloaded blazingly fast because every downloader was becoming an uploader. BitTorrent quickly became the global de facto standard—used not only for piracy but also officially adopted by open-source projects like [Ubuntu](https://ubuntu.com/), [Debian](https://www.debian.org/), and [Blender](https://www.blender.org/). At its peak, BitTorrent traffic accounted for one-third of global internet traffic. It proved that decentralization doesn't have to sacrifice efficiency—it can even be more efficient than centralization.
 
-#### The Art of Discovery: Kademlia and DHT
+### Kademlia and DHT
 
 But new challenges emerged: without a Tracker telling users each other's addresses, how could they find each other in the vast crowd?
 
@@ -46,7 +46,7 @@ It's like a dynamically updated social map: each node only needs to remember a s
 
 In 2005, BitTorrent integrated Kademlia (called [Mainline DHT](https://wiki.theory.org/BitTorrentSpecification#Distributed_Hash_Table_.28DHT.29)), completely freeing itself from Tracker dependency. From then on, even if all central servers disappeared, the network could still self-discover and self-connect. P2P truly became autonomous.
 
-#### The Price of Freedom: Freenet and I2P
+### Freenet and I2P
 
 Meanwhile, another group was thinking about deeper questions: if networks can share files, can they also share freedom?
 
@@ -54,7 +54,7 @@ In 2000, [Ian Clarke](https://en.wikipedia.org/wiki/Ian_Clarke_(computer_scienti
 
 A few years later, [I2P (Invisible Internet Project)](https://geti2p.net/) went further, building an entire encrypted overlay network that made communication itself invisible. P2P was no longer just a tool but became infrastructure for digital resistance.
 
-#### The Currency Revolution: Bitcoin and Blockchain
+### Bitcoin and Blockchain
 
 But the true paradigm shift happened on October 31, 2008. That day, someone using the pseudonym **[Satoshi Nakamoto](https://en.wikipedia.org/wiki/Satoshi_Nakamoto)** published a white paper on a cryptography mailing list: "[Bitcoin: A Peer-to-Peer Electronic Cash System](https://bitcoin.org/bitcoin.pdf)."
 
@@ -68,7 +68,7 @@ P2P was no longer just about transferring files but transferring value, establis
 
 After Bitcoin, blockchain projects like [Ethereum](https://ethereum.org/), [Solana](https://solana.com/), and [Polkadot](https://polkadot.network/) emerged, all built on P2P networks. Blockchain transformed P2P technology from a geek's toy into a trillion-dollar industry.
 
-#### Beyond File Sharing: IPFS's Ambition
+### IPFS
 
 Inspired by this, in 2015, [Protocol Labs](https://protocol.ai/) launched [IPFS (InterPlanetary File System)](https://ipfs.tech/), targeting the HTTP protocol itself.
 
@@ -76,7 +76,7 @@ HTTP is based on location addressing—links point to server locations, and once
 
 IPFS integrates BitTorrent's chunked transfers, Kademlia's distributed routing, and adds Git's version control philosophy. It attempts to build a next-generation internet that's permanent, censorship-resistant, and user-sovereign.
 
-#### libp2p: The Grand Synthesis
+### libp2p
 
 Over twenty years of P2P development left countless valuable experiences and lessons. But every project kept reinventing the wheel: Napster wrote one set of networking code, BitTorrent wrote another, IPFS wrote yet another...
 
@@ -88,7 +88,7 @@ Today, libp2p has been adopted by numerous projects: IPFS, [Filecoin](https://fi
 
 And this is what we'll be learning in this tutorial.
 
-#### Why Does P2P Matter?
+### Why P2P Matters
 
 From Napster's dorm room code to Bitcoin's genesis block to IPFS's interplanetary vision, P2P has traveled twenty-five years. It began with a teenager's frustration with slow downloads but ultimately evolved into a grand experiment about power, freedom, and collaboration.
 
@@ -101,7 +101,7 @@ It tells us:
 - **Resource Utilization**: Leverages participants' idle bandwidth and storage instead of relying on expensive centralized infrastructure.
 - **Trust Reconstruction**: Trust doesn't have to depend on authority; order can emerge without command.
 
-### What Will We Build?
+## What Will We Build?
 
 In this tutorial, we'll use Rust and libp2p to build a P2P collaborative editing backend—similar to Google Docs' real-time collaboration, but without Google's servers.
 
@@ -109,7 +109,7 @@ Imagine: you and your colleagues editing a document together, with data syncing 
 
 This is the charm of P2P, and this is our goal.
 
-### Summary
+## Summary
 
 From Napster's explosive debut in 1999 to today's global blockchain networks, P2P technology has traveled twenty-five years. This history tells us:
 
