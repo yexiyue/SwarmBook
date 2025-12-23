@@ -17,27 +17,27 @@
 
 > 目标：理解 libp2p 的设计哲学和核心抽象，能运行第一个 P2P 程序
 
-| 章节 | 内容 | 规范 | 实践 |
-|-----|------|-----|-----|
-| 01-what-is-p2p | P2P vs C/S 架构，去中心化的意义 | - | - |
-| 02-libp2p-overview | libp2p 模块化设计，核心抽象层 | - | - |
-| 03-peer-identity | PeerId、密钥对、节点身份 | [peer-ids](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md) | - |
-| 04-multiaddr | 多地址格式，协议无关的寻址 | [addressing](https://github.com/libp2p/specs/blob/master/addressing/README.md) | - |
-| 05-swarm | Swarm 连接管理，事件驱动模型 | - | - |
-| 06-behaviour | NetworkBehaviour trait，协议组合 | - | - |
-| 07-first-node | 第一个 libp2p 节点 | [ping](https://github.com/libp2p/specs/blob/master/ping/ping.md) | [ping](https://github.com/libp2p/rust-libp2p/tree/master/examples/ping) |
+| 章节                 | 内容                          | 规范                                                                             | 实践                                                                      |
+| ------------------ | --------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| 01-what-is-p2p     | P2P vs C/S 架构，去中心化的意义       | -                                                                              | -                                                                       |
+| 02-libp2p-overview | libp2p 模块化设计，核心抽象层          | -                                                                              | -                                                                       |
+| 03-peer-identity   | PeerId、密钥对、节点身份             | [peer-ids](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md)   | -                                                                       |
+| 04-multiaddr       | 多地址格式，协议无关的寻址               | [addressing](https://github.com/libp2p/specs/blob/master/addressing/README.md) | -                                                                       |
+| 05-swarm           | Swarm 连接管理，事件驱动模型           | -                                                                              | -                                                                       |
+| 06-behaviour       | NetworkBehaviour trait，协议组合 | -                                                                              | -                                                                       |
+| 07-first-node      | 第一个 libp2p 节点               | [ping](https://github.com/libp2p/specs/blob/master/ping/ping.md)               | [ping](https://github.com/libp2p/rust-libp2p/tree/master/examples/ping) |
 
 ### 第二篇：传输层与连接
 
 > 目标：理解连接建立的完整流程，能切换不同传输协议
 
-| 章节 | 内容 | 规范 | 实践 |
-|-----|------|-----|-----|
-| 08-transport | 传输层抽象，Transport trait | [connections](https://github.com/libp2p/specs/blob/master/connections/README.md) | - |
-| 09-tcp-quic | TCP vs QUIC，连接建立与性能对比 | [quic](https://github.com/libp2p/specs/blob/master/quic/README.md) | 修改 ping 使用 QUIC |
-| 10-security | Noise/TLS 加密握手 | [noise](https://github.com/libp2p/specs/blob/master/noise/README.md) | - |
-| 11-muxing | 流复用原理，yamux | [yamux](https://github.com/libp2p/specs/blob/master/yamux/README.md) | - |
-| 12-upgrade | 连接升级，协议协商 | [connections](https://github.com/libp2p/specs/blob/master/connections/README.md) | - |
+| 章节           | 内容                    | 规范                                                                               | 实践              |
+| ------------ | --------------------- | -------------------------------------------------------------------------------- | --------------- |
+| 08-transport | 传输层抽象，Transport trait | [connections](https://github.com/libp2p/specs/blob/master/connections/README.md) | -               |
+| 09-tcp-quic  | TCP vs QUIC，连接建立与性能对比 | [quic](https://github.com/libp2p/specs/blob/master/quic/README.md)               | 修改 ping 使用 QUIC |
+| 10-security  | Noise/TLS 加密握手        | [noise](https://github.com/libp2p/specs/blob/master/noise/README.md)             | -               |
+| 11-muxing    | 流复用原理，yamux           | [yamux](https://github.com/libp2p/specs/blob/master/yamux/README.md)             | -               |
+| 12-upgrade   | 连接升级，协议协商             | [connections](https://github.com/libp2p/specs/blob/master/connections/README.md) | -               |
 
 ### 第三篇：协议与流
 

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "swarm-book-client",
+  "version": "0.1.0",
+  "identifier": "com.gy.swarm-book-client",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "swarm-book-client",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdDQTVERDMyMjIwQzVDRjgKUldUNFhBd2lNdDJsZksyNFM1ZTBjdURwWW56ZmJNQlZ1N25XMnVqZXVRRlFBTUlmVUFSWGkyOHcK",
+      "endpoints": [
+        "https://api.upgrade.toolsetlink.com/v1/tauri/upgrade?tauriKey=UdaEUDfdykkbz612J_c-PQ&versionName={{current_version}}&appointVersionName=&devModelKey=&devKey=&target={{target}}&arch={{arch}}",
+        "https://github.com/yexiyue/SwarmBook/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}

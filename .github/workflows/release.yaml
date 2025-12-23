@@ -1,0 +1,104 @@
+name: "release"
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+# This workflow will trigger on tag push (v*) or manually to create a GitHub release.
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "macos-latest"
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest"
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+          cache-dependency-path: client/pnpm-lock.yaml
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "client/src-tauri -> target"
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+        working-directory: .
+
+      - name: install frontend dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Check if prerelease
+        id: check_prerelease
+        shell: bash
+        run: |
+          if [[ "${{ github.ref_name }}" =~ -(alpha|beta|rc) ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: build and release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: client
+          args: ${{ matrix.args }}
+          tagName: ${{ github.ref_name }}
+          releaseName: "swarm-book-client v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: false
+          prerelease: ${{ steps.check_prerelease.outputs.is_prerelease == 'true' }}
+
+  upgradeLink-upload:
+    needs: publish-tauri # 依赖于 publish-tauri作业完成
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a request to UpgradeLink
+        uses: toolsetlink/upgradelink-action@v5
+        with:
+          source-url: "https://github.com/yexiyue/SwarmBook/releases/download/${{ github.ref_name }}/latest.json"
+          access-key: ${{ secrets.UPGRADE_LINK_ACCESS_KEY }} # ACCESS_KEY  密钥key
+          tauri-key: ${{ secrets.UPGRADE_LINK_TAURI_KEY }} # TAURI_KEY tauri 应用唯一标识
+          github-token: ${{ secrets.GITHUB_TOKEN }}
