@@ -22,7 +22,8 @@ tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-libp2p = "0.56.0"
+hex = "0.4"
+libp2p = { version = "0.54", features = ["ed25519", "secp256k1", "ecdsa"] }
 tauri-plugin-os = "2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
