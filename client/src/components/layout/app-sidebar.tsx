@@ -6,6 +6,7 @@ import {
   Home,
   KeyRound,
   MessageCircle,
+  Radio,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { to: "/", icon: Home, label: "概览" },
   { to: "/peer-id", icon: KeyRound, label: "PeerId 生成器" },
+  { to: "/ping", icon: Radio, label: "Ping 测试" },
   { to: "/chat", icon: MessageCircle, label: "P2P 聊天" },
 ];
 

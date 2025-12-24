@@ -1,5 +1,5 @@
 [workspace]
-members = ["./client/src-tauri", "examples/peerid"]
+members = ["./client/src-tauri", "examples/ping"]
 resolver = "2"
 
 

@@ -1,0 +1,17 @@
+[package]
+name = "ping"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+libp2p = { workspace = true, features = [
+    "noise",
+    "ping",
+    "tcp",
+    "tokio",
+    "yamux",
+] }
+tokio = { version = "1.48.0", features = ["full"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }

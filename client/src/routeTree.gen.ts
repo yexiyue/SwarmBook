@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PingRouteImport } from './routes/ping'
 import { Route as PeerIdRouteImport } from './routes/peer-id'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PingRoute = PingRouteImport.update({
+  id: '/ping',
+  path: '/ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PeerIdRoute = PeerIdRouteImport.update({
   id: '/peer-id',
   path: '/peer-id',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/peer-id': typeof PeerIdRoute
+  '/ping': typeof PingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/peer-id': typeof PeerIdRoute
+  '/ping': typeof PingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/peer-id': typeof PeerIdRoute
+  '/ping': typeof PingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/peer-id'
+  fullPaths: '/' | '/chat' | '/peer-id' | '/ping'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/peer-id'
-  id: '__root__' | '/' | '/chat' | '/peer-id'
+  to: '/' | '/chat' | '/peer-id' | '/ping'
+  id: '__root__' | '/' | '/chat' | '/peer-id' | '/ping'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChatRoute: typeof ChatRoute
   PeerIdRoute: typeof PeerIdRoute
+  PingRoute: typeof PingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ping': {
+      id: '/ping'
+      path: '/ping'
+      fullPath: '/ping'
+      preLoaderRoute: typeof PingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/peer-id': {
       id: '/peer-id'
       path: '/peer-id'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChatRoute: ChatRoute,
   PeerIdRoute: PeerIdRoute,
+  PingRoute: PingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

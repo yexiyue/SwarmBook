@@ -8,7 +8,7 @@ const RootLayout = () => (
     <main className="flex-1 overflow-auto">
       <Outlet />
     </main>
-    <TanStackRouterDevtools />
+    {/* <TanStackRouterDevtools /> */}
   </div>
 );
 
