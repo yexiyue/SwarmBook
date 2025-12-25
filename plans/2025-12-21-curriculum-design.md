@@ -3,7 +3,7 @@
 ## 定位
 
 - **目标读者**：熟悉 Rust，想学习 P2P 网络编程的开发者
-- **教程风格**：原理 + 实践并重，每个概念先讲"为什么"，再讲"怎么做"
+- **教程风格**：实践驱动，先跑起来再理解原理（"先会用，再懂为什么"）
 - **最终目标**：构建一个基于 libp2p 的 yjs P2P 后端，实现去中心化协作编辑
 - **章节策略**：基础概念小章节，实战项目大章节
 - **规范参考**：[libp2p/specs](https://github.com/libp2p/specs) 官方规范解读
@@ -15,17 +15,17 @@
 
 ### 第一篇：libp2p 核心概念
 
-> 目标：理解 libp2p 的设计哲学和核心抽象，能运行第一个 P2P 程序
+> 目标：运行第一个 P2P 程序，再回头理解背后的核心抽象
 
 | 章节                 | 内容                          | 规范                                                                             | 实践                                                                      |
 | ------------------ | --------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | 01-what-is-p2p     | P2P vs C/S 架构，去中心化的意义       | -                                                                              | -                                                                       |
 | 02-libp2p-overview | libp2p 模块化设计，核心抽象层          | -                                                                              | -                                                                       |
-| 03-peer-identity   | PeerId、密钥对、节点身份             | [peer-ids](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md)   | -                                                                       |
-| 04-multiaddr       | 多地址格式，协议无关的寻址               | [addressing](https://github.com/libp2p/specs/blob/master/addressing/README.md) | -                                                                       |
-| 05-swarm           | Swarm 连接管理，事件驱动模型           | -                                                                              | -                                                                       |
-| 06-behaviour       | NetworkBehaviour trait，协议组合 | -                                                                              | -                                                                       |
-| 07-first-node      | 第一个 libp2p 节点               | [ping](https://github.com/libp2p/specs/blob/master/ping/ping.md)               | [ping](https://github.com/libp2p/rust-libp2p/tree/master/examples/ping) |
+| 03-first-node      | **第一个 libp2p 节点**（先跑起来！）    | [ping](https://github.com/libp2p/specs/blob/master/ping/ping.md)               | [ping](https://github.com/libp2p/rust-libp2p/tree/master/examples/ping) |
+| 04-peer-identity   | PeerId、密钥对、节点身份（结合 03 代码讲解） | [peer-ids](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md)   | -                                                                       |
+| 05-multiaddr       | 多地址格式，协议无关的寻址（结合 03 代码讲解）   | [addressing](https://github.com/libp2p/specs/blob/master/addressing/README.md) | -                                                                       |
+| 06-swarm           | Swarm 连接管理，事件驱动模型（结合 03 代码讲解）| -                                                                              | -                                                                       |
+| 07-behaviour       | NetworkBehaviour trait，协议组合 | -                                                                              | -                                                                       |
 
 ### 第二篇：传输层与连接
 
@@ -106,11 +106,11 @@ docs/src/content/docs/
 ├── 01-core-concepts/        # 第一篇：libp2p 核心概念
 │   ├── 01-what-is-p2p.md
 │   ├── 02-libp2p-overview.md
-│   ├── 03-peer-identity.md
-│   ├── 04-multiaddr.md
-│   ├── 05-swarm.md
-│   ├── 06-behaviour.md
-│   └── 07-first-node.md
+│   ├── 03-first-node.md     # 先跑起来！
+│   ├── 04-peer-identity.md
+│   ├── 05-multiaddr.md
+│   ├── 06-swarm.md
+│   └── 07-behaviour.md
 │
 ├── 02-transport/            # 第二篇：传输层与连接
 │   ├── 08-transport.md
