@@ -6,6 +6,11 @@ tableOfContents:
   maxHeadingLevel: 4
 ---
 
+> 工欲善其事，必先利其器。
+> ——《论语·卫灵公》
+
+子贡问怎样行仁，孔子说：工匠要做好工作，必须先磨好工具。P2P 网络开发也是如此——在真正构建应用之前，你需要一套趁手的工具。而 libp2p，就是二十年 P2P 发展史锤炼出的那把利器。
+
 ## 每个 P2P 项目都在重复造轮子
 
 2015 年，[胡安·贝内特（Juan Benet）](https://en.wikipedia.org/wiki/Juan_Benet_(computer_scientist))和他的团队正在开发 [IPFS](https://ipfs.tech/)——一个旨在取代 HTTP 的去中心化文件系统。他们需要构建一个能在全球数百万节点间高效通信的 P2P 网络。

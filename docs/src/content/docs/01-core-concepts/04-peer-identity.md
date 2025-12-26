@@ -6,6 +6,19 @@ tableOfContents:
   maxHeadingLevel: 4
 ---
 
+> 名不正，则言不顺；言不顺，则事不成。
+> ——《论语·子路》
+
+孔子两千多年前就指出：名分是一切行动的基础。在 P2P 网络中，"名"就是节点的身份——没有可靠的身份认证，节点之间的通信就无法建立信任，整个网络就会陷入混乱。
+
+上一章我们运行了第一个 libp2p 节点，看到了这样的输出：
+
+```text
+INFO ping: Local peer id: 12D3KooWAbCd...
+```
+
+这串 `12D3KooW...` 开头的字符串就是 **PeerId**——节点的身份标识。它是怎么来的？为什么它能让我们信任对方？
+
 ## 一个真实的安全事故
 
 2018 年，以太坊网络遭遇了一次"[日蚀攻击](https://www.cs.bu.edu/~goldbe/projects/eclipseEth.pdf)"（Eclipse Attack）。攻击者通过精心策划，逐步控制了受害节点的所有网络连接。受害者以为自己连接的是真正的以太坊网络，实际上连接的全是攻击者控制的恶意节点。受害者看到的交易、区块，都是攻击者伪造的。
@@ -44,20 +57,15 @@ flowchart LR
     D --> E[PeerId]
 ```
 
-用 Rust 代码表示：
+回顾上一章的代码：
 
 ```rust
-use libp2p::identity::Keypair;
-
-// 生成 Ed25519 密钥对
-let keypair = Keypair::generate_ed25519();
-
-// 从公钥派生 PeerId
+let keypair = libp2p::identity::Keypair::generate_ed25519();
 let peer_id = keypair.public().to_peer_id();
-
-println!("PeerId: {peer_id}");
-// 输出: 12D3KooWMgcJeCtWqiptgnn4HHY6jRkMaRzHumXrntP3Np7qUqMT
+tracing::info!("Local peer id: {peer_id}");
 ```
+
+这正是 PeerId 的生成过程：从密钥对中提取公钥，再从公钥派生出 PeerId。
 
 ### 为什么 PeerId 可信？
 
@@ -67,7 +75,7 @@ PeerId 的魔力在于它与密钥对绑定。当节点 A 连接到节点 B 时�
 2. A 用这个公钥计算 PeerId，验证是否匹配
 3. B 用私钥签名一个挑战消息，证明自己确实持有私钥
 
-这个过程发生在连接建立时的加密握手中（Noise 或 TLS），无需额外配置。
+回顾上一章的时序图，这个过程发生在 **Noise 握手** 阶段——双方交换公钥和签名，验证对方的 PeerId。这就是为什么我们在构建 Swarm 时要指定 `noise::Config::new`。
 
 **关键洞察**：PeerId 不是"分配"的，而是"计算"出来的。只有持有对应私钥的人，才能证明自己是某个 PeerId 的主人。
 
@@ -86,18 +94,7 @@ libp2p 支持四种密钥类型：
 你可以使用本教程的配套工具「PeerId 生成器」来生成不同密钥类型的 PeerId，直观感受它们的格式差异。
 :::
 
-**实践建议**：除非有特殊理由，始终使用 Ed25519。它是 libp2p 的默认选择，也是目前最均衡的方案。
-
-```rust
-use libp2p::identity::Keypair;
-
-// Ed25519（推荐）
-let keypair = Keypair::generate_ed25519();
-
-// 如果需要其他类型
-// let keypair = Keypair::generate_secp256k1();
-// let keypair = Keypair::generate_ecdsa();
-```
+**实践建议**：除非有特殊理由，始终使用 Ed25519。它是 libp2p 的默认选择，也是目前最均衡的方案——上一章我们用的正是 `generate_ed25519()`。
 
 ## 规范解读：密钥与 PeerId 的序列化
 
@@ -246,15 +243,13 @@ fn load_or_generate_keypair(path: &Path) -> Keypair {
 
 ## 小结
 
-本章介绍了 libp2p 的身份系统：
+本章深入解析了上一章代码中出现的 PeerId：
 
 - **PeerId** 是节点的唯一标识，由公钥派生，可验证、位置无关
 - **Ed25519** 是推荐的密钥类型，兼顾安全性和性能
-- **密钥序列化** 遵循官方规范，使用 Protobuf 编码，确保跨实现互操作
+- **Noise 握手** 在连接时验证 PeerId，防止中间人攻击
 - **密钥持久化** 确保节点重启后身份不变
 
 回到开篇的日蚀攻击——如果每个节点都有一个可验证的身份，攻击者就无法轻易伪装成合法节点。这正是 libp2p 身份系统的价值：**你不是"连接到某个地址"，而是"连接到某个身份"**。
 
-至于节点之间如何建立连接、如何在连接时验证身份，我们会在后续章节逐步展开。
-
-下一章，我们将学习 Multiaddr——libp2p 如何用一种灵活的格式描述"怎么找到某个节点"。
+下一章，我们将学习 Multiaddr——上一章中 `/ip4/127.0.0.1/tcp/54321` 这种地址格式是怎么回事。

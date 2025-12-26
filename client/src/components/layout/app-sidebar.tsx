@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Home,
   KeyRound,
+  Link2,
   MessageCircle,
   Radio,
   type LucideIcon,
@@ -26,6 +27,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { to: "/", icon: Home, label: "概览" },
   { to: "/peer-id", icon: KeyRound, label: "PeerId 生成器" },
+  { to: "/multiaddr", icon: Link2, label: "Multiaddr 解析" },
   { to: "/ping", icon: Radio, label: "Ping 测试" },
   { to: "/chat", icon: MessageCircle, label: "P2P 聊天" },
 ];

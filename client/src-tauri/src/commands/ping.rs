@@ -14,7 +14,6 @@ use tokio::{
     select,
     sync::{mpsc, Mutex},
 };
-use tracing::info;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
