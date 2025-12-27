@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { KeyRound, MessageCircle, Wrench } from "lucide-react";
+import { Fingerprint, KeyRound, Link2, MessageCircle, Radio, Wrench } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -19,6 +19,27 @@ const tools = [
     title: "PeerId 生成器",
     description: "生成不同密钥类型的 libp2p PeerId，用于理解节点身份机制",
     chapter: "第三章：节点身份",
+  },
+  {
+    to: "/multiaddr",
+    icon: Link2,
+    title: "Multiaddr 解析",
+    description: "解析多地址格式，理解 libp2p 的地址抽象层",
+    chapter: "第二章：核心概念",
+  },
+  {
+    to: "/ping",
+    icon: Radio,
+    title: "Ping 测试",
+    description: "启动 libp2p 节点并测试与其他节点的连通性",
+    chapter: "第四章：网络行为",
+  },
+  {
+    to: "/identify",
+    icon: Fingerprint,
+    title: "Identify 协议",
+    description: "连接节点后自动交换身份信息，查看协议版本和监听地址",
+    chapter: "第四章：网络行为",
   },
   {
     to: "/chat",

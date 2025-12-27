@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PingRouteImport } from './routes/ping'
 import { Route as PeerIdRouteImport } from './routes/peer-id'
 import { Route as MultiaddrRouteImport } from './routes/multiaddr'
+import { Route as IdentifyRouteImport } from './routes/identify'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +31,11 @@ const MultiaddrRoute = MultiaddrRouteImport.update({
   path: '/multiaddr',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IdentifyRoute = IdentifyRouteImport.update({
+  id: '/identify',
+  path: '/identify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
@@ -44,6 +50,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/identify': typeof IdentifyRoute
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/identify': typeof IdentifyRoute
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/identify': typeof IdentifyRoute
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/multiaddr' | '/peer-id' | '/ping'
+  fullPaths: '/' | '/chat' | '/identify' | '/multiaddr' | '/peer-id' | '/ping'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/multiaddr' | '/peer-id' | '/ping'
-  id: '__root__' | '/' | '/chat' | '/multiaddr' | '/peer-id' | '/ping'
+  to: '/' | '/chat' | '/identify' | '/multiaddr' | '/peer-id' | '/ping'
+  id:
+    | '__root__'
+    | '/'
+    | '/chat'
+    | '/identify'
+    | '/multiaddr'
+    | '/peer-id'
+    | '/ping'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChatRoute: typeof ChatRoute
+  IdentifyRoute: typeof IdentifyRoute
   MultiaddrRoute: typeof MultiaddrRoute
   PeerIdRoute: typeof PeerIdRoute
   PingRoute: typeof PingRoute
@@ -102,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MultiaddrRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/identify': {
+      id: '/identify'
+      path: '/identify'
+      fullPath: '/identify'
+      preLoaderRoute: typeof IdentifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chat': {
       id: '/chat'
       path: '/chat'
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChatRoute: ChatRoute,
+  IdentifyRoute: IdentifyRoute,
   MultiaddrRoute: MultiaddrRoute,
   PeerIdRoute: PeerIdRoute,
   PingRoute: PingRoute,

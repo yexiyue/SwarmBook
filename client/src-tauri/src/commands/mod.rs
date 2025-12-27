@@ -4,3 +4,5 @@ mod ping;
 pub use ping::*;
 mod multiaddr;
 pub use multiaddr::*;
+mod identify;
+pub use identify::*;

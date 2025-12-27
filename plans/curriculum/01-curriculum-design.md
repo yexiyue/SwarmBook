@@ -10,7 +10,6 @@
 - **实践素材**：[rust-libp2p/examples](https://github.com/libp2p/rust-libp2p/tree/master/examples) 官方示例
 
 ---
-
 ## 章节规划
 
 ### 第一篇：libp2p 核心概念

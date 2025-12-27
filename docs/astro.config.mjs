@@ -23,14 +23,14 @@ export default defineConfig({
 					autogenerate: { directory: '01-core-concepts' },
 				},
 				{
-					label: '传输层与连接',
-					translations: { en: 'Transport & Connection' },
-					autogenerate: { directory: '02-transport' },
-				},
-				{
 					label: '协议与流',
 					translations: { en: 'Protocols & Streams' },
-					autogenerate: { directory: '03-protocols' },
+					autogenerate: { directory: '02-protocols' },
+				},
+				{
+					label: '传输层与连接',
+					translations: { en: 'Transport & Connection' },
+					autogenerate: { directory: '03-transport' },
 				},
 				{
 					label: '节点发现',
