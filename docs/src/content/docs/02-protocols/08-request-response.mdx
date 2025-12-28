@@ -15,7 +15,9 @@ import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 在 P2P 网络中，节点之间也需要这种"一问一答"的通信方式：查询对方有哪些文件、请求某个区块的数据、调用远程服务……libp2p 的 `request_response` 模块正是为此而生。
 
-## 什么是请求-响应模式？
+## 从 Ping 到请求-响应
+
+在前面的章节中，我们学习了 Ping 协议——它能测量延迟，但只能发送固定的 32 字节数据。如果我们想发送自定义消息呢？
 
 ```mermaid
 sequenceDiagram
@@ -28,41 +30,67 @@ sequenceDiagram
     Note over A,B: 一个请求对应一个响应
 ```
 
-特点：
+请求-响应模式的特点：
 - **一对一**：每个请求有且只有一个响应
 - **同步语义**：请求方等待响应
 - **有超时**：请求可能失败
+- **自定义消息**：可以发送任意结构化数据（这是与 Ping 的关键区别）
 
-与 Ping 的区别：Ping 发送固定数据，request-response 可以发送任意结构化消息。
+## 使用 request_response 的四要素
 
-## 核心组件
-
-使用 `request_response` 需要定义：
-
-1. **请求类型**：你要发送什么
-2. **响应类型**：你期望收到什么
-3. **编解码器**：如何序列化/反序列化消息
-4. **协议名称**：协议标识符
+要使用 `request_response` 模块，需要定义四个要素：
 
 ```mermaid
 flowchart LR
-    subgraph Types["类型定义"]
+    subgraph Types["1. 类型定义"]
         Req[MyRequest]
         Res[MyResponse]
     end
 
-    subgraph Codec["编解码器"]
-        CBOR[cbor::Behaviour]
+    subgraph Codec["2. 编解码器"]
+        CBOR[cbor / json]
     end
 
-    subgraph Protocol["协议"]
+    subgraph Protocol["3. 协议名称"]
         Name["/my-app/req-resp/1.0.0"]
     end
 
-    Types --> Codec --> Protocol
+    subgraph Support["4. 协议支持模式"]
+        Mode[Full / Inbound / Outbound]
+    end
+
+    Types --> Codec --> Protocol --> Support
 ```
 
-## 为什么需要 EventLoop 模式？
+### 编解码器
+
+编解码器负责将 Rust 结构体序列化为字节流发送，以及将收到的字节流反序列化回结构体。libp2p 内置了两种开箱即用的编解码器：
+
+| 编解码器 | 特点 | 适用场景 |
+|---------|------|---------|
+| `cbor` | 紧凑的二进制格式 | 生产环境（推荐） |
+| `json` | 文本格式 | 调试、可读性要求高 |
+
+```toml
+# Cargo.toml 中启用对应 feature
+libp2p = { version = "0.56", features = ["request-response", "cbor"] }
+# 或
+libp2p = { version = "0.56", features = ["request-response", "json"] }
+```
+
+:::note[自定义编解码器]
+内置编解码器能满足大多数场景。如果你需要更精细的控制——比如自定义消息格式、压缩、加密——可以实现 `Codec` trait。我们会在[自定义协议](/02-protocols/10-custom-protocol)章节详细介绍。
+:::
+
+### 协议支持模式
+
+| 值 | 说明 |
+|---|------|
+| `Full` | 既可发送请求也可接收请求 |
+| `Inbound` | 只接收请求（服务端模式） |
+| `Outbound` | 只发送请求（客户端模式） |
+
+## 架构设计：EventLoop 模式
 
 在之前的 Ping 和 Identify 示例中，我们用一个简单的 `loop` 处理 Swarm 事件：
 
@@ -108,7 +136,7 @@ flowchart LR
     EventLoop -->|InboundRequest| EventTx --> Main
 ```
 
-这就是 **EventLoop + Client** 模式——网络层和业务层分离，各司其职。
+这就是 **EventLoop + Client** 模式——网络层和业务层分离，各司其职。这种模式在实际的 P2P 应用中非常常见，接下来我们就用它来实现一个完整的请求-响应示例。
 
 ## 动手实践
 
@@ -665,51 +693,13 @@ flowchart LR
 
 </Steps>
 
-## 编解码器（Codec）
-
-编解码器负责将 Rust 结构体序列化为字节流发送，以及将收到的字节流反序列化回结构体。libp2p 内置了两种开箱即用的编解码器：
-
-| 编解码器 | 特点 | 适用场景 |
-|---------|------|---------|
-| `cbor` | 紧凑的二进制格式 | 生产环境（推荐） |
-| `json` | 文本格式 | 调试、可读性要求高 |
-
-```toml
-# Cargo.toml 中启用对应 feature
-libp2p = { version = "0.56", features = ["request-response", "cbor"] }
-# 或
-libp2p = { version = "0.56", features = ["request-response", "json"] }
-```
-
-:::note[自定义编解码器]
-内置编解码器能满足大多数场景。如果你需要更精细的控制——比如自定义消息格式、压缩、加密——可以实现 `Codec` trait。我们会在[自定义协议](/02-protocols/10-custom-protocol)章节详细介绍如何从零实现编解码器。
-:::
-
-## ProtocolSupport 选项
-
-| 值 | 说明 |
-|---|------|
-| `Full` | 既可发送请求也可接收请求 |
-| `Inbound` | 只接收请求（服务端模式） |
-| `Outbound` | 只发送请求（客户端模式） |
-
 ## 错误处理
 
-请求可能因多种原因失败：
-
-```rust
-request_response::Event::OutboundFailure { request_id, error, .. } => {
-    if let Some(sender) = self.pending_requests.remove(&request_id) {
-        let _ = sender.send(Err(error.into()));
-    }
-}
-```
-
-常见错误类型：
+在上面的代码中，我们通过 `OutboundFailure` 事件处理请求失败的情况。常见的错误类型包括：
 
 | 错误 | 说明 |
 |-----|------|
-| `Timeout` | 请求超时 |
+| `Timeout` | 请求超时（可通过 `Config::with_request_timeout` 配置） |
 | `ConnectionClosed` | 连接已关闭 |
 | `UnsupportedProtocols` | 对方不支持此协议 |
 

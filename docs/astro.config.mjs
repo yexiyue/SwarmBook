@@ -10,7 +10,7 @@ export default defineConfig({
 		starlight({
 			title: 'SwarmBook',
 			description: '和我一起探索去中心化网络的奥秘 - Rust libp2p 学习笔记与实战',
-			customCss: ['./src/styles/custom.css'],
+			// customCss: ['./src/styles/custom.css'],
 			defaultLocale: 'root',
 			locales: {
 				root: { label: '简体中文', lang: 'zh-CN' },
