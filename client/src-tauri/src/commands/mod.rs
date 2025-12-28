@@ -6,3 +6,5 @@ mod multiaddr;
 pub use multiaddr::*;
 mod identify;
 pub use identify::*;
+mod reqresp;
+pub use reqresp::*;

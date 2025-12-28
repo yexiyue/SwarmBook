@@ -8,6 +8,7 @@ import {
   KeyRound,
   Link2,
   MessageCircle,
+  MessageSquare,
   Radio,
   type LucideIcon,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const navItems: NavItem[] = [
   { to: "/multiaddr", icon: Link2, label: "Multiaddr 解析" },
   { to: "/ping", icon: Radio, label: "Ping 测试" },
   { to: "/identify", icon: Fingerprint, label: "Identify 协议" },
+  { to: "/reqresp", icon: MessageSquare, label: "Request-Response" },
   { to: "/chat", icon: MessageCircle, label: "P2P 聊天" },
 ];
 

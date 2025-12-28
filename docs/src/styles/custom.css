@@ -1,0 +1,9 @@
+/* 让代码高亮更醒目 - 浅绿色 */
+.expressive-code .highlight {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  border-left: 3px solid #22c55e !important;
+}
+
+:root[data-theme='dark'] .expressive-code .highlight {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}

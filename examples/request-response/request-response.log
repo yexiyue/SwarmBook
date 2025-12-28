@@ -1,0 +1,77 @@
+2025-12-28T06:06:24.713246Z  INFO libp2p_swarm: local_peer_id=12D3KooWSC7KkPun4gvi3b1bL9Rfkt4gSsnLYSdirP4Ck8yaDWfB
+2025-12-28T06:06:24.720682Z  INFO request_response::network: Listening on /ip4/198.18.0.1/tcp/27737
+2025-12-28T06:06:24.720769Z  INFO request_response::network: Listening on /ip4/192.168.1.208/tcp/27737
+2025-12-28T06:06:24.720791Z  INFO request_response::network: Listening on /ip4/127.0.0.1/tcp/27737
+2025-12-28T06:06:34.872604Z  INFO request_response::network: Connected to 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV
+2025-12-28T06:06:34.876859Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:06:34.878164Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(334.5µs) }
+2025-12-28T06:06:49.881398Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.2356ms) }
+2025-12-28T06:07:04.886569Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(2.1011ms) }
+2025-12-28T06:07:04.887194Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:07:19.888445Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(403.2µs) }
+2025-12-28T06:07:34.897896Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.9024ms) }
+2025-12-28T06:07:34.898694Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:07:49.900378Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(747.4µs) }
+2025-12-28T06:08:04.911932Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(2.188ms) }
+2025-12-28T06:08:04.912122Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:08:19.915087Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(377.7µs) }
+2025-12-28T06:08:34.914117Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:08:34.928783Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(438.3µs) }
+2025-12-28T06:08:49.941796Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.2149ms) }
+2025-12-28T06:09:04.920642Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:09:04.949806Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(364.4µs) }
+2025-12-28T06:09:19.956612Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(463.1µs) }
+2025-12-28T06:09:34.933032Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:09:34.963326Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(445.9µs) }
+2025-12-28T06:09:49.967401Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(529.1µs) }
+2025-12-28T06:10:04.940151Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:10:04.969663Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(251.6µs) }
+2025-12-28T06:10:19.975151Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(479µs) }
+2025-12-28T06:10:34.948331Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:10:34.991978Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.7623ms) }
+2025-12-28T06:10:35.459041Z  INFO request_response::network: Request from 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV: MyRequest { name: "swarmbook", age: 1 }
+2025-12-28T06:10:49.992616Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(426.1µs) }
+2025-12-28T06:11:04.947450Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:11:05.008367Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(553.7µs) }
+2025-12-28T06:11:20.024974Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.7541ms) }
+2025-12-28T06:11:34.954084Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:11:35.029094Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(489.8µs) }
+2025-12-28T06:11:50.041450Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(1.3247ms) }
+2025-12-28T06:12:04.968569Z  INFO request_response::network: Identified 12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV:
+  protocol: /swarmbook/1.0.0
+  agent: rust-libp2p/0.47.0
+  addrs: [/ip4/198.18.0.1/tcp/54597, /ip4/127.0.0.1/tcp/54597, /ip4/192.168.1.208/tcp/54597]
+2025-12-28T06:12:05.054803Z  INFO request_response::network: Ping: Event { peer: PeerId("12D3KooWA2JnE996tAxJ9KNrrMGQ7AmJM6r1aW3sJtMcUHUYoJZV"), connection: ConnectionId(1), result: Ok(433.8µs) }

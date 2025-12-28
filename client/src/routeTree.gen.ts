@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReqrespRouteImport } from './routes/reqresp'
 import { Route as PingRouteImport } from './routes/ping'
 import { Route as PeerIdRouteImport } from './routes/peer-id'
 import { Route as MultiaddrRouteImport } from './routes/multiaddr'
@@ -16,6 +17,11 @@ import { Route as IdentifyRouteImport } from './routes/identify'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ReqrespRoute = ReqrespRouteImport.update({
+  id: '/reqresp',
+  path: '/reqresp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PingRoute = PingRouteImport.update({
   id: '/ping',
   path: '/ping',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
+  '/reqresp': typeof ReqrespRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
+  '/reqresp': typeof ReqrespRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,27 @@ export interface FileRoutesById {
   '/multiaddr': typeof MultiaddrRoute
   '/peer-id': typeof PeerIdRoute
   '/ping': typeof PingRoute
+  '/reqresp': typeof ReqrespRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/identify' | '/multiaddr' | '/peer-id' | '/ping'
+  fullPaths:
+    | '/'
+    | '/chat'
+    | '/identify'
+    | '/multiaddr'
+    | '/peer-id'
+    | '/ping'
+    | '/reqresp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/identify' | '/multiaddr' | '/peer-id' | '/ping'
+  to:
+    | '/'
+    | '/chat'
+    | '/identify'
+    | '/multiaddr'
+    | '/peer-id'
+    | '/ping'
+    | '/reqresp'
   id:
     | '__root__'
     | '/'
@@ -85,6 +108,7 @@ export interface FileRouteTypes {
     | '/multiaddr'
     | '/peer-id'
     | '/ping'
+    | '/reqresp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,10 +118,18 @@ export interface RootRouteChildren {
   MultiaddrRoute: typeof MultiaddrRoute
   PeerIdRoute: typeof PeerIdRoute
   PingRoute: typeof PingRoute
+  ReqrespRoute: typeof ReqrespRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reqresp': {
+      id: '/reqresp'
+      path: '/reqresp'
+      fullPath: '/reqresp'
+      preLoaderRoute: typeof ReqrespRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ping': {
       id: '/ping'
       path: '/ping'
@@ -150,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   MultiaddrRoute: MultiaddrRoute,
   PeerIdRoute: PeerIdRoute,
   PingRoute: PingRoute,
+  ReqrespRoute: ReqrespRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

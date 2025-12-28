@@ -35,6 +35,8 @@ libp2p = { version = "0.56.0", features = [
     "tokio",
     "macros",
     "identify",
+    "request-response",
+    "cbor",
 ] }
 tauri-plugin-os = "2"
 anyhow = "1.0.100"
