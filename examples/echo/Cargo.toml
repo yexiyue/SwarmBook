@@ -1,0 +1,22 @@
+[package]
+name = "echo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+dialoguer = "0.11"
+futures = "0.3.31"
+libp2p = { workspace = true, features = [
+    "noise",
+    "ping",
+    "tcp",
+    "tokio",
+    "yamux",
+    "macros",
+] }
+libp2p-stream = "0.4.0-alpha"
+serde = { version = "1.0.228", features = ["derive"] }
+tokio = { version = "1.48.0", features = ["full"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }

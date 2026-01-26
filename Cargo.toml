@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "./client/src-tauri",
+    "./client/src-tauri", "examples/counter", "examples/echo",
     "examples/identify",
     "examples/ping",
     "examples/request-response",

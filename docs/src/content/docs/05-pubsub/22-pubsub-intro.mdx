@@ -6,6 +6,8 @@ tableOfContents:
   maxHeadingLevel: 4
 ---
 
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
 > 一石激起千层浪。
 > ——中国谚语
 
@@ -42,7 +44,7 @@ flowchart TB
 ### 核心概念
 
 | 概念 | 说明 |
-| --- | --- |
+|-----|------|
 | **Topic（主题）** | 消息的分类标识 |
 | **Publisher（发布者）** | 向主题发送消息的节点 |
 | **Subscriber（订阅者）** | 订阅主题、接收消息的节点 |
@@ -51,7 +53,7 @@ flowchart TB
 ### 与请求-响应的区别
 
 | 特性 | 请求-响应 | Pub/Sub |
-| --- | --- | --- |
+|-----|---------|---------|
 | 通信方式 | 一对一 | 一对多 |
 | 耦合度 | 发送方需知道接收方 | 完全解耦 |
 | 消息流向 | 双向 | 单向广播 |
@@ -63,202 +65,157 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    subgraph Traditional["传统模式"]
-        C1[客户端] --> Server[中心服务器]
-        C2[客户端] --> Server
-        Server --> C3[客户端]
-        Server --> C4[客户端]
-    end
-```
-
-```mermaid
-flowchart LR
     subgraph P2P["P2P 模式"]
         N1[节点] <--> N2[节点]
         N2 <--> N3[节点]
         N3 <--> N4[节点]
         N1 <--> N4[节点]
-        N2 <--> N4[节点]
     end
 ```
 
 P2P Pub/Sub 面临的挑战：
 
-1. **无中心**：没有服务器转发消息
-2. **动态拓扑**：节点随时加入/离开
-3. **可扩展性**：网络可能有成千上万节点
-4. **可靠性**：消息不能丢失
-5. **效率**：避免消息重复、减少带宽
+| 挑战 | 说明 |
+|-----|------|
+| 无中心 | 没有服务器转发消息 |
+| 动态拓扑 | 节点随时加入/离开 |
+| 可扩展性 | 网络可能有成千上万节点 |
+| 可靠性 | 消息不能丢失 |
+| 效率 | 避免消息重复、减少带宽 |
 
 ## libp2p 的 Pub/Sub 方案
 
 libp2p 提供了多种 Pub/Sub 实现：
 
 | 实现 | 特点 | 适用场景 |
-| --- | --- | --- |
+|-----|------|---------|
 | **FloodSub** | 简单泛洪 | 小型网络、测试 |
 | **GossipSub** | 八卦协议 | 生产环境、大规模网络 |
-| **EpiSub** | 流行病协议 | 实验性 |
 
-### FloodSub：简单泛洪
-
-最简单的实现——收到消息后转发给所有已知节点。
-
-```mermaid
-flowchart TB
-    A[节点 A] -->|"消息"| B[节点 B]
-    A -->|"消息"| C[节点 C]
-    B -->|"消息"| D[节点 D]
-    B -->|"消息"| E[节点 E]
-    C -->|"消息"| F[节点 F]
-    C -->|"消息"| D
-```
-
-问题：
-
-- 消息重复严重
-- 带宽浪费
-- 不适合大规模网络
-
-### GossipSub：智能八卦
-
-GossipSub 是 libp2p 推荐的 Pub/Sub 实现，通过"八卦"策略优化消息传播。
+**GossipSub** 是推荐的实现，通过"八卦"策略优化消息传播：
 
 ```mermaid
 flowchart TB
     subgraph Mesh["网格（Mesh）"]
         A[节点 A] <--> B[节点 B]
         B <--> C[节点 C]
-        C <--> D[节点 D]
-        A <--> D
+        A <--> C
     end
 
     subgraph Gossip["八卦"]
+        D[节点 D]
         E[节点 E]
-        F[节点 F]
     end
 
-    A -.->|"IHAVE"| E
-    B -.->|"IHAVE"| F
-    E -.->|"IWANT"| A
+    A -.->|"IHAVE"| D
+    B -.->|"IHAVE"| E
 ```
 
 核心思想：
-
 1. **网格（Mesh）**：每个主题维护一个小型全连接网络
 2. **八卦（Gossip）**：向网格外节点发送"我有消息"的通知
 3. **按需拉取**：收到通知的节点可以主动拉取消息
 
-## 基本使用
+## 动手实践
 
-### 创建 GossipSub Behaviour
+:::tip[配套工具]
+本教程配套的桌面应用提供了可视化的 Pub/Sub 功能。你可以用它订阅主题、发布消息——直观体验 P2P 广播。
+:::
 
-```rust
-use libp2p::gossipsub::{self, IdentTopic, MessageAuthenticity};
-use std::time::Duration;
+让我们实现一个简单的 P2P 聊天室。
 
-// 消息 ID 生成函数
-let message_id_fn = |message: &gossipsub::Message| {
-    // 使用消息内容的哈希作为 ID
-    let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    std::hash::Hash::hash(&message.data, &mut hasher);
-    gossipsub::MessageId::from(std::hash::Hasher::finish(&hasher).to_be_bytes().to_vec())
-};
+<Steps>
 
-// 配置
-let config = gossipsub::ConfigBuilder::default()
-    .heartbeat_interval(Duration::from_secs(1))  // 心跳间隔
-    .validation_mode(gossipsub::ValidationMode::Strict)  // 严格验证
-    .message_id_fn(message_id_fn)  // 消息 ID 函数
-    .build()
-    .expect("Valid config");
+1. **添加依赖**
 
-// 创建 Behaviour
-let gossipsub = gossipsub::Behaviour::new(
-    MessageAuthenticity::Signed(keypair.clone()),  // 消息签名
-    config,
-)?;
-```
+   ```toml ins="gossipsub"
+   [dependencies]
+   libp2p = { version = "0.56", features = ["tcp", "noise", "yamux", "gossipsub", "mdns", "macros", "tokio"] }
+   tokio = { version = "1", features = ["full"] }
+   futures = "0.3"
+   ```
 
-### 订阅主题
+2. **定义组合行为**
 
-```rust
-use libp2p::gossipsub::IdentTopic;
+   ```rust ins={4-5}
+   #[derive(NetworkBehaviour)]
+   struct ChatBehaviour {
+       gossipsub: gossipsub::Behaviour,
+       mdns: mdns::tokio::Behaviour,
+   }
+   ```
 
-// 创建主题
-let topic = IdentTopic::new("my-app/chat");
+3. **配置 GossipSub**
 
-// 订阅
-swarm.behaviour_mut().gossipsub.subscribe(&topic)?;
+   ```rust ins={3-12}
+   .with_behaviour(|key| {
+       let local_peer_id = key.public().to_peer_id();
 
-// 取消订阅
-swarm.behaviour_mut().gossipsub.unsubscribe(&topic)?;
-```
+       // 消息 ID 函数（用于去重）
+       let message_id_fn = |message: &gossipsub::Message| {
+           use std::hash::{Hash, Hasher};
+           let mut hasher = std::collections::hash_map::DefaultHasher::new();
+           message.data.hash(&mut hasher);
+           message.source.hash(&mut hasher);
+           gossipsub::MessageId::from(hasher.finish().to_be_bytes().to_vec())
+       };
 
-### 发布消息
+       let config = gossipsub::ConfigBuilder::default()
+           .heartbeat_interval(Duration::from_secs(1))
+           .validation_mode(gossipsub::ValidationMode::Strict)
+           .message_id_fn(message_id_fn)
+           .build()?;
 
-```rust
-let topic = IdentTopic::new("my-app/chat");
-let message = b"Hello, P2P world!";
+       let gossipsub = gossipsub::Behaviour::new(
+           gossipsub::MessageAuthenticity::Signed(key.clone()),
+           config,
+       )?;
 
-swarm.behaviour_mut()
-    .gossipsub
-    .publish(topic, message.to_vec())?;
-```
+       let mdns = mdns::tokio::Behaviour::new(mdns::Config::default(), local_peer_id)?;
 
-### 处理事件
+       Ok(ChatBehaviour { gossipsub, mdns })
+   })?
+   ```
 
-```rust
-use libp2p::gossipsub;
+4. **订阅主题**
 
-loop {
-    match swarm.select_next_some().await {
-        SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(event)) => {
-            match event {
-                // 收到消息
-                gossipsub::Event::Message {
-                    propagation_source,
-                    message_id,
-                    message,
-                } => {
-                    println!("Received message from {propagation_source}:");
-                    println!("  Topic: {}", message.topic);
-                    println!("  Data: {:?}", String::from_utf8_lossy(&message.data));
-                }
+   ```rust ins={3-4}
+   // 创建并订阅主题
+   let topic = gossipsub::IdentTopic::new("chat/room");
+   swarm.behaviour_mut().gossipsub.subscribe(&topic)?;
+   ```
 
-                // 订阅事件
-                gossipsub::Event::Subscribed { peer_id, topic } => {
-                    println!("{peer_id} subscribed to {topic}");
-                }
+5. **发布消息**
 
-                // 取消订阅事件
-                gossipsub::Event::Unsubscribed { peer_id, topic } => {
-                    println!("{peer_id} unsubscribed from {topic}");
-                }
+   ```rust ins={3-5}
+   // 发布消息到主题
+   let message = "Hello, P2P world!";
+   swarm.behaviour_mut()
+       .gossipsub
+       .publish(topic.clone(), message.as_bytes())?;
+   ```
 
-                // 八卦元数据
-                gossipsub::Event::GossipsubNotSupported { peer_id } => {
-                    println!("{peer_id} doesn't support GossipSub");
-                }
-            }
-        }
-        _ => {}
-    }
-}
-```
+6. **处理接收的消息**
 
-## 完整示例：简易聊天室
+   ```rust ins={3-8}
+   gossipsub::Event::Message { message, propagation_source, .. } => {
+       let msg = String::from_utf8_lossy(&message.data);
+       let peer = message.source.unwrap_or(propagation_source);
+       println!("[{peer}]: {msg}");
+   }
+   ```
+
+</Steps>
+
+## 完整代码
 
 ```rust
+use anyhow::Result;
 use libp2p::{
-    gossipsub::{self, IdentTopic, MessageAuthenticity},
-    identity::Keypair,
-    mdns,
-    swarm::{NetworkBehaviour, SwarmEvent},
-    noise, tcp, yamux, SwarmBuilder,
+    futures::StreamExt, gossipsub, mdns, noise, swarm::NetworkBehaviour,
+    swarm::SwarmEvent, tcp, yamux, SwarmBuilder,
 };
 use std::time::Duration;
-use futures::StreamExt;
 use tokio::io::{self, AsyncBufReadExt};
 
 #[derive(NetworkBehaviour)]
@@ -268,8 +225,8 @@ struct ChatBehaviour {
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let keypair = Keypair::generate_ed25519();
+async fn main() -> Result<()> {
+    let keypair = libp2p::identity::Keypair::generate_ed25519();
     let local_peer_id = keypair.public().to_peer_id();
     println!("PeerId: {local_peer_id}");
 
@@ -286,8 +243,7 @@ async fn main() -> anyhow::Result<()> {
         .heartbeat_interval(Duration::from_secs(1))
         .validation_mode(gossipsub::ValidationMode::Strict)
         .message_id_fn(message_id_fn)
-        .build()
-        .expect("Valid config");
+        .build()?;
 
     let mut swarm = SwarmBuilder::with_existing_identity(keypair.clone())
         .with_tokio()
@@ -297,25 +253,20 @@ async fn main() -> anyhow::Result<()> {
             yamux::Config::default,
         )?
         .with_behaviour(|key| {
-            let gossipsub = gossipsub::Behaviour::new(
-                MessageAuthenticity::Signed(key.clone()),
-                gossipsub_config,
-            )?;
-
-            let mdns = mdns::tokio::Behaviour::new(
-                mdns::Config::default(),
-                key.public().to_peer_id(),
-            )?;
-
-            Ok(ChatBehaviour { gossipsub, mdns })
+            let local_peer_id = key.public().to_peer_id();
+            Ok(ChatBehaviour {
+                gossipsub: gossipsub::Behaviour::new(
+                    gossipsub::MessageAuthenticity::Signed(key.clone()),
+                    gossipsub_config,
+                )?,
+                mdns: mdns::tokio::Behaviour::new(mdns::Config::default(), local_peer_id)?,
+            })
         })?
-        .with_swarm_config(|cfg| {
-            cfg.with_idle_connection_timeout(Duration::from_secs(60))
-        })
+        .with_swarm_config(|cfg| cfg.with_idle_connection_timeout(Duration::from_secs(60)))
         .build();
 
     // 订阅聊天主题
-    let topic = IdentTopic::new("chat/room");
+    let topic = gossipsub::IdentTopic::new("chat/room");
     swarm.behaviour_mut().gossipsub.subscribe(&topic)?;
 
     swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
@@ -323,8 +274,7 @@ async fn main() -> anyhow::Result<()> {
     // 异步读取标准输入
     let mut stdin = io::BufReader::new(io::stdin()).lines();
 
-    println!("Chat room started. Type messages and press Enter to send.");
-    println!("---");
+    println!("Chat room started. Type messages and press Enter.\n---");
 
     loop {
         tokio::select! {
@@ -332,7 +282,6 @@ async fn main() -> anyhow::Result<()> {
             line = stdin.next_line() => {
                 if let Ok(Some(line)) = line {
                     if !line.is_empty() {
-                        // 发布消息
                         if let Err(e) = swarm
                             .behaviour_mut()
                             .gossipsub
@@ -350,13 +299,12 @@ async fn main() -> anyhow::Result<()> {
                     SwarmEvent::NewListenAddr { address, .. } => {
                         println!("Listening on {address}");
                     }
-
                     SwarmEvent::Behaviour(ChatBehaviourEvent::Mdns(event)) => {
                         match event {
                             mdns::Event::Discovered(peers) => {
-                                for (peer_id, addr) in peers {
+                                for (peer_id, _) in peers {
                                     swarm.behaviour_mut().gossipsub.add_explicit_peer(&peer_id);
-                                    println!("Discovered: {peer_id}");
+                                    println!("+ Discovered: {peer_id}");
                                 }
                             }
                             mdns::Event::Expired(peers) => {
@@ -366,15 +314,13 @@ async fn main() -> anyhow::Result<()> {
                             }
                         }
                     }
-
                     SwarmEvent::Behaviour(ChatBehaviourEvent::Gossipsub(
                         gossipsub::Event::Message { message, propagation_source, .. }
                     )) => {
                         let msg = String::from_utf8_lossy(&message.data);
                         let peer = message.source.unwrap_or(propagation_source);
-                        println!("[{peer}]: {msg}");
+                        println!("[{}]: {msg}", &peer.to_string()[..8]);
                     }
-
                     _ => {}
                 }
             }
@@ -383,7 +329,45 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-运行多个终端实例，它们会通过 mDNS 自动发现并加入同一个聊天室。
+## 运行测试
+
+<Tabs>
+<TabItem label="终端 1">
+
+```bash
+cargo run
+```
+
+输出：
+
+```text
+PeerId: 12D3KooWAbCd...
+Listening on /ip4/127.0.0.1/tcp/54321
+Chat room started. Type messages and press Enter.
+---
+```
+
+</TabItem>
+<TabItem label="终端 2">
+
+```bash
+cargo run
+```
+
+输出：
+
+```text
+PeerId: 12D3KooWXyZw...
+Listening on /ip4/127.0.0.1/tcp/54322
+Chat room started. Type messages and press Enter.
+---
++ Discovered: 12D3KooWAbCd...
+```
+
+</TabItem>
+</Tabs>
+
+现在在任一终端输入消息，另一个终端会收到！
 
 ## 主题设计
 
@@ -416,14 +400,23 @@ my-app/
     └── state
 ```
 
+## GossipSub 事件
+
+| 事件 | 说明 |
+|-----|------|
+| `Message` | 收到消息 |
+| `Subscribed` | 节点订阅了主题 |
+| `Unsubscribed` | 节点取消订阅 |
+| `GossipsubNotSupported` | 对端不支持 GossipSub |
+
 ## 小结
 
 本章介绍了 Pub/Sub 消息模型：
 
 - **发布-订阅模式**：一对多的消息传递
 - **主题（Topic）**：消息的分类标识
-- **P2P 挑战**：无中心、动态拓扑、可扩展性
 - **GossipSub**：libp2p 推荐的 Pub/Sub 实现
+- **自动发现**：配合 mDNS 实现局域网自动组网
 
 Pub/Sub 是构建实时应用的基础——聊天室、协作编辑、状态同步都依赖它。
 

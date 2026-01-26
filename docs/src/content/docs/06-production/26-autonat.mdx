@@ -6,6 +6,8 @@ tableOfContents:
   maxHeadingLevel: 4
 ---
 
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
 > 知己知彼，百战不殆。
 > ——《孙子兵法》
 
@@ -43,134 +45,113 @@ sequenceDiagram
 AutoNAT 检测的结果：
 
 | 状态 | 说明 |
-| --- | --- |
+|-----|------|
 | **Public** | 可从外部直接访问 |
 | **Private** | 在 NAT 后面，无法直接访问 |
 | **Unknown** | 尚未确定（初始状态） |
 
-## 配置 AutoNAT
+## 动手实践
 
-### 基本配置
+:::tip[配套工具]
+本教程配套的桌面应用内置了 NAT 检测功能。打开应用后，连接到远程节点，即可查看你的 NAT 状态变化。
+:::
 
-```rust
-use libp2p::autonat;
+<Steps>
 
-let autonat = autonat::Behaviour::new(
-    local_peer_id,
-    autonat::Config::default(),
-);
-```
+1. **添加依赖**
 
-### 自定义配置
+   ```toml ins="autonat"
+   [dependencies]
+   libp2p = { version = "0.56", features = ["tcp", "noise", "yamux", "autonat", "identify", "macros", "tokio"] }
+   tokio = { version = "1", features = ["full"] }
+   anyhow = "1"
+   tracing-subscriber = "0.3"
+   ```
 
-```rust
-use libp2p::autonat;
-use std::time::Duration;
+2. **定义组合行为**
 
-let config = autonat::Config {
-    // 重试间隔
-    retry_interval: Duration::from_secs(90),
-    // 刷新间隔（重新检测）
-    refresh_interval: Duration::from_secs(900),
-    // 置信度阈值（需要多少确认）
-    confidence_max: 3,
-    // 启动延迟
-    boot_delay: Duration::from_secs(15),
-    // 节流配置
-    throttle_server_period: Duration::from_secs(1),
-    // 只使用全局 IP
-    only_global_ips: true,
-    ..Default::default()
-};
+   AutoNAT 需要配合 Identify 协议使用：
 
-let autonat = autonat::Behaviour::new(local_peer_id, config);
-```
+   ```rust ins={4-5}
+   #[derive(NetworkBehaviour)]
+   struct MyBehaviour {
+       identify: identify::Behaviour,
+       autonat: autonat::Behaviour,
+   }
+   ```
+
+3. **配置 AutoNAT**
+
+   ```rust ins={3-10}
+   .with_behaviour(|key| {
+       let local_peer_id = key.public().to_peer_id();
+
+       let autonat_config = autonat::Config {
+           boot_delay: Duration::from_secs(10),
+           refresh_interval: Duration::from_secs(60),
+           retry_interval: Duration::from_secs(30),
+           ..Default::default()
+       };
+
+       Ok(MyBehaviour {
+           identify: identify::Behaviour::new(
+               identify::Config::new("/autonat-example/1.0.0".into(), key.public())
+           ),
+           autonat: autonat::Behaviour::new(local_peer_id, autonat_config),
+       })
+   })?
+   ```
+
+4. **处理 NAT 状态变化**
+
+   ```rust ins={3-18}
+   SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(event)) => {
+       match event {
+           autonat::Event::StatusChanged { old, new } => {
+               println!("NAT status: {old:?} -> {new:?}");
+
+               match new {
+                   autonat::NatStatus::Public(addr) => {
+                       println!("We are PUBLIC at {addr}");
+                       // 可以作为服务器接受入站连接
+                   }
+                   autonat::NatStatus::Private => {
+                       println!("We are PRIVATE (behind NAT)");
+                       // 需要使用中继
+                   }
+                   autonat::NatStatus::Unknown => {
+                       println!("NAT status unknown, waiting for probes...");
+                   }
+               }
+           }
+           _ => {}
+       }
+   }
+   ```
+
+</Steps>
 
 ### 配置参数说明
 
 | 参数 | 说明 | 默认值 |
-| --- | --- | --- |
+|-----|------|--------|
 | `retry_interval` | 检测失败后重试间隔 | 90 秒 |
 | `refresh_interval` | 状态确认后刷新间隔 | 15 分钟 |
 | `confidence_max` | 需要的确认次数 | 3 |
 | `boot_delay` | 启动后等待时间 | 15 秒 |
 | `only_global_ips` | 只检测全局 IP | true |
 
-## 事件处理
+## 完整代码
 
 ```rust
-use libp2p::autonat;
-
-loop {
-    match swarm.select_next_some().await {
-        SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(event)) => {
-            match event {
-                // NAT 状态变化
-                autonat::Event::StatusChanged { old, new } => {
-                    println!("NAT status changed: {old:?} -> {new:?}");
-
-                    match new {
-                        autonat::NatStatus::Public(addr) => {
-                            println!("We are publicly reachable at {addr}");
-                            // 可以作为服务器
-                        }
-                        autonat::NatStatus::Private => {
-                            println!("We are behind NAT");
-                            // 需要使用中继
-                        }
-                        autonat::NatStatus::Unknown => {
-                            println!("NAT status unknown");
-                        }
-                    }
-                }
-
-                // 入站探测请求
-                autonat::Event::InboundProbe(probe) => {
-                    match probe {
-                        autonat::InboundProbeEvent::Request { peer, .. } => {
-                            println!("Received probe request from {peer}");
-                        }
-                        autonat::InboundProbeEvent::Response { peer, .. } => {
-                            println!("Sent probe response to {peer}");
-                        }
-                        autonat::InboundProbeEvent::Error { peer, error, .. } => {
-                            println!("Probe error for {peer}: {error}");
-                        }
-                    }
-                }
-
-                // 出站探测请求
-                autonat::Event::OutboundProbe(probe) => {
-                    match probe {
-                        autonat::OutboundProbeEvent::Request { peer, .. } => {
-                            println!("Sent probe request to {peer}");
-                        }
-                        autonat::OutboundProbeEvent::Response { peer, address, .. } => {
-                            println!("Probe response from {peer}: reachable at {address:?}");
-                        }
-                        autonat::OutboundProbeEvent::Error { peer, error, .. } => {
-                            println!("Probe error from {peer}: {error:?}");
-                        }
-                    }
-                }
-            }
-        }
-        _ => {}
-    }
-}
-```
-
-## 完整示例
-
-```rust
+use anyhow::Result;
 use libp2p::{
     autonat, identify,
+    futures::StreamExt,
     identity::Keypair,
-    swarm::{NetworkBehaviour, SwarmEvent},
-    noise, tcp, yamux, SwarmBuilder,
+    noise, swarm::NetworkBehaviour, swarm::SwarmEvent, tcp, yamux, SwarmBuilder,
 };
 use std::time::Duration;
-use futures::StreamExt;
 
 #[derive(NetworkBehaviour)]
 struct MyBehaviour {
@@ -179,7 +160,7 @@ struct MyBehaviour {
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
     let keypair = Keypair::generate_ed25519();
@@ -196,12 +177,10 @@ async fn main() -> anyhow::Result<()> {
         .with_behaviour(|key| {
             let local_peer_id = key.public().to_peer_id();
 
-            // Identify 用于交换地址信息
             let identify = identify::Behaviour::new(
                 identify::Config::new("/autonat-example/1.0.0".into(), key.public())
             );
 
-            // AutoNAT 配置
             let autonat_config = autonat::Config {
                 boot_delay: Duration::from_secs(10),
                 refresh_interval: Duration::from_secs(60),
@@ -295,67 +274,9 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-## AutoNAT 与其他协议配合
-
-### 与 Identify 配合
-
-AutoNAT 需要知道自己的外部地址，Identify 提供这个信息：
-
-```rust
-#[derive(NetworkBehaviour)]
-struct MyBehaviour {
-    identify: identify::Behaviour,  // 必需：提供地址信息
-    autonat: autonat::Behaviour,
-}
-```
-
-### 与 Kademlia 配合
-
-根据 NAT 状态设置 Kademlia 模式：
-
-```rust
-use libp2p::kad::Mode;
-
-SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(
-    autonat::Event::StatusChanged { new, .. }
-)) => {
-    match new {
-        autonat::NatStatus::Public(_) => {
-            // 公网可达，作为 DHT 服务器
-            swarm.behaviour_mut().kademlia.set_mode(Some(Mode::Server));
-        }
-        autonat::NatStatus::Private => {
-            // NAT 后面，只作为客户端
-            swarm.behaviour_mut().kademlia.set_mode(Some(Mode::Client));
-        }
-        _ => {}
-    }
-}
-```
-
-### 与 Relay 配合
-
-根据 NAT 状态决定是否使用中继：
-
-```rust
-SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(
-    autonat::Event::StatusChanged { new, .. }
-)) => {
-    if matches!(new, autonat::NatStatus::Private) {
-        // 在 NAT 后面，监听中继地址
-        let relay_addr = format!(
-            "{}/p2p-circuit/p2p/{}",
-            relay_server_addr,
-            local_peer_id
-        );
-        swarm.listen_on(relay_addr.parse()?)?;
-    }
-}
-```
-
 ## 置信度机制
 
-AutoNAT 使用置信度来确定状态：
+AutoNAT 使用置信度来确定状态，避免因单次探测结果误判：
 
 ```mermaid
 flowchart TB
@@ -378,50 +299,81 @@ flowchart TB
     Probe3 -->|"其他"| More[继续探测]
 ```
 
-### 配置置信度
+## AutoNAT 与其他协议配合
 
-```rust
-let config = autonat::Config {
-    confidence_max: 3,  // 需要 3 次确认才能确定状态
-    ..Default::default()
-};
+### 与 Kademlia 配合
+
+根据 NAT 状态设置 Kademlia 模式：
+
+```rust ins={3-11}
+SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(
+    autonat::Event::StatusChanged { new, .. }
+)) => {
+    match new {
+        autonat::NatStatus::Public(_) => {
+            // 公网可达，作为 DHT 服务器
+            swarm.behaviour_mut().kademlia.set_mode(Some(kad::Mode::Server));
+        }
+        autonat::NatStatus::Private => {
+            // NAT 后面，只作为客户端
+            swarm.behaviour_mut().kademlia.set_mode(Some(kad::Mode::Client));
+        }
+        _ => {}
+    }
+}
+```
+
+### 与 Relay 配合
+
+根据 NAT 状态决定是否使用中继：
+
+```rust ins={3-9}
+SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(
+    autonat::Event::StatusChanged { new, .. }
+)) => {
+    if matches!(new, autonat::NatStatus::Private) {
+        // 在 NAT 后面，监听中继地址
+        let relay_listen = relay_addr
+            .clone()
+            .with(libp2p::multiaddr::Protocol::P2pCircuit);
+        swarm.listen_on(relay_listen)?;
+    }
+}
 ```
 
 ## 故障排查
 
 ### 常见问题
 
-1. **始终显示 Unknown**
+<Tabs>
+<TabItem label="始终显示 Unknown">
+
+确保连接了足够多的支持 AutoNAT 的节点，并检查日志：
 
 ```rust
-// 确保连接了足够多的支持 AutoNAT 的节点
-// 检查日志
 std::env::set_var("RUST_LOG", "libp2p_autonat=debug");
+tracing_subscriber::fmt::init();
 ```
 
-2. **状态频繁变化**
+</TabItem>
+<TabItem label="状态频繁变化">
+
+增加置信度阈值，需要更多确认：
 
 ```rust
-// 增加置信度阈值
 let config = autonat::Config {
-    confidence_max: 5,  // 需要更多确认
+    confidence_max: 5,  // 从默认 3 增加到 5
     ..Default::default()
 };
 ```
 
-3. **探测超时**
+</TabItem>
+<TabItem label="探测超时">
 
-```rust
-// 检查防火墙设置
-// 确保监听的端口可访问
-```
+检查防火墙设置，确保监听的端口可访问。也可能是远程节点不支持 AutoNAT 服务端。
 
-### 调试日志
-
-```rust
-std::env::set_var("RUST_LOG", "libp2p_autonat=debug,libp2p_identify=debug");
-tracing_subscriber::fmt::init();
-```
+</TabItem>
+</Tabs>
 
 ## 小结
 

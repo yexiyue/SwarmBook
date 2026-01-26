@@ -29,12 +29,12 @@
 
 > 目标：通过实践掌握 NetworkBehaviour，能实现自定义协议
 
-| 章节 | 内容 | 规范 | 实践 |
-|-----|------|-----|------|
-| 07-identify | Identify 协议，组合多个 Behaviour | [identify](https://github.com/libp2p/specs/blob/master/identify/README.md) | [identify](https://github.com/libp2p/rust-libp2p/tree/master/examples/identify) |
-| 08-request-response | 请求-响应模式 | - | [file-sharing](https://github.com/libp2p/rust-libp2p/tree/master/examples/file-sharing) |
-| 09-streams | 流管理与生命周期 | - | [stream](https://github.com/libp2p/rust-libp2p/tree/master/examples/stream) |
-| 10-custom-protocol | 自定义协议实现 | - | 实现 echo 协议 |
+| 章节                  | 内容                         | 规范                                                                         | 实践                                                                                      |
+| ------------------- | -------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 07-identify         | Identify 协议，组合多个 Behaviour | [identify](https://github.com/libp2p/specs/blob/master/identify/README.md) | [identify](https://github.com/libp2p/rust-libp2p/tree/master/examples/identify)         |
+| 08-request-response | 请求-响应模式                    | -                                                                          | [file-sharing](https://github.com/libp2p/rust-libp2p/tree/master/examples/file-sharing) |
+| 09-streams          | 流管理与生命周期                   | -                                                                          | [stream](https://github.com/libp2p/rust-libp2p/tree/master/examples/stream)             |
+| 10-custom-protocol  | 自定义协议实现                    | -                                                                          | 实现 echo 协议                                                                              |
 
 ### 第三篇：传输层原理
 

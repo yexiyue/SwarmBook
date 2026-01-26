@@ -6,6 +6,8 @@ tableOfContents:
   maxHeadingLevel: 4
 ---
 
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
 > 一生二，二生三，三生万物。
 > ——《道德经》
 
@@ -118,31 +120,46 @@ libp2p 使用 **Yamux**（Yet another Multiplexer）作为默认流复用协议�
 | 心跳 | 可配置的 keep-alive |
 | 优雅关闭 | 支持半关闭（FIN） |
 
-### 在 libp2p 中配置 Yamux
+## 动手实践
 
-```rust
-use libp2p::{tcp, noise, yamux, SwarmBuilder};
+:::tip[配套工具]
+本教程配套的桌面应用展示了当前连接的流数量和状态。你可以观察多个协议如何在同一个连接上并行运行。
+:::
 
-let swarm = SwarmBuilder::with_new_identity()
-    .with_tokio()
-    .with_tcp(
-        tcp::Config::default(),
-        noise::Config::new,
-        yamux::Config::default,  // 默认配置
-    )?
-    .with_behaviour(|_| /* ... */)?
-    .build();
-```
+<Steps>
 
-自定义配置：
+1. **配置 Yamux**
 
-```rust
-use libp2p::yamux;
+   ```rust ins={6}
+   let swarm = SwarmBuilder::with_new_identity()
+       .with_tokio()
+       .with_tcp(
+           tcp::Config::default(),
+           noise::Config::new,
+           yamux::Config::default,  // 默认配置
+       )?
+       .with_behaviour(|_| /* ... */)?
+       .build();
+   ```
 
-let yamux_config = yamux::Config::default()
-    .set_receive_window_size(1024 * 1024)  // 1MB 接收窗口
-    .set_max_buffer_size(2 * 1024 * 1024); // 2MB 最大缓冲
-```
+2. **自定义 Yamux 配置**
+
+   ```rust ins={3-4}
+   use libp2p::yamux;
+
+   let yamux_config = yamux::Config::default()
+       .set_receive_window_size(1024 * 1024)  // 1MB 接收窗口
+       .set_max_buffer_size(2 * 1024 * 1024); // 2MB 最大缓冲
+   ```
+
+3. **限制最大流数量**
+
+   ```rust ins={3}
+   let yamux_config = yamux::Config::default()
+       .set_max_num_streams(1000);  // 限制最大流数量
+   ```
+
+</Steps>
 
 ## 流的生命周期
 
@@ -212,17 +229,26 @@ sequenceDiagram
 
 还记得上一章提到 QUIC 不需要指定复用层吗？这是因为 QUIC 协议**原生支持流复用**：
 
+<Tabs>
+<TabItem label="TCP 需要复用层">
+
 ```rust
-// TCP 需要指定复用层
 .with_tcp(
     tcp::Config::default(),
     noise::Config::new,
     yamux::Config::default,  // 需要
 )?
+```
 
-// QUIC 不需要
+</TabItem>
+<TabItem label="QUIC 不需要">
+
+```rust
 .with_quic()  // 流复用已内置
 ```
+
+</TabItem>
+</Tabs>
 
 QUIC 的流复用与 Yamux 类似，但有一些优势：
 
@@ -265,12 +291,7 @@ flowchart LR
 
 ### 3. 资源限制
 
-每个流需要维护状态，过多并发流会消耗内存。Yamux 默认限制可以调整：
-
-```rust
-let yamux_config = yamux::Config::default()
-    .set_max_num_streams(1000);  // 限制最大流数量
-```
+每个流需要维护状态，过多并发流会消耗内存。
 
 ## 小结
 
